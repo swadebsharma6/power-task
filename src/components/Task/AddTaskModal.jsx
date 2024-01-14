@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-const AddTaskModal = ({onSave}) => {
-    const [task, setTask] = useState({
+const AddTaskModal = ({onSave, taskToUpdate, onCloseClick}) => {
+    const [task, setTask] = useState(taskToUpdate || {
          id: crypto.randomUUID(),
         title :"",
         description: "",
@@ -9,6 +9,8 @@ const AddTaskModal = ({onSave}) => {
         priority: "",
         isFavorite: false
     })
+
+    const [isAdd, setIsAdd] = useState(Object.is(taskToUpdate, null))
 
 
     const handleChange = e =>{
@@ -34,7 +36,7 @@ const AddTaskModal = ({onSave}) => {
          <h2
            className="mb-9 text-center text-2xl font-bold text-white lg:mb-11 lg:text-[28px]"
          >
-           Add New Task
+        { isAdd ? " Add New Task" : "Edit New Task"}
          </h2>
    
       
@@ -102,13 +104,20 @@ const AddTaskModal = ({onSave}) => {
            </div>
          </div>
      
-         <div className="mt-16 flex justify-center lg:mt-20">
+         <div className="mt-16 flex justify-between lg:mt-20">
            <button
-           onClick={()=>onSave(task)}
+            onClick={()=>onCloseClick(setIsAdd())}
+             className="rounded bg-red-600 px-4 py-2 text-white transition-all hover:opacity-80"
+           >
+           close
+           </button>
+
+           <button
+            onClick={()=>onSave(task, isAdd)}
              type="submit"
              className="rounded bg-blue-600 px-4 py-2 text-white transition-all hover:opacity-80"
            >
-             Create new Task
+           { isAdd ? " Create new Task" : "Edit New Task"}
            </button>
          </div>
        </form>
